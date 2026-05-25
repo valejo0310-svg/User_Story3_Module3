@@ -2,24 +2,22 @@ const btn = document.getElementById("btn")
 const list = document.getElementById("list")
 const message = document.getElementById("message")
 const input = document.getElementById("notes")
-const btnDelete = document.createElement ("button")
-let pipu = []
 console.log(btn, list,input)
 
+let noteList = JSON.parse(localStorage.getItem('notas')) || []
+
+noteList.forEach(nota => loadNotes(nota))
 
 btn.addEventListener ("click",() =>{
     const notes = input.value.trim()
     if(notes ===""){
-        message.textContent = "llena esa vaina"
+        message.textContent = "Please  complete this field"
         return;
     }
-    pipu.push(notes)
-    localStorage.setItem("notas", JSON.stringify(pipu))
-
-    message.textContent = ""
-
+    noteList.push(notes)
+    saveStorage()
     loadNotes(notes);
-
+    message.textContent = ""
 
     input.value = ""
     input.focus ()
@@ -32,26 +30,25 @@ function loadNotes (notes) {
     const btnDelete = document.createElement ("button")
 
     btnDelete.textContent = "Delete"
-
     li.textContent = notes
-    input.value = ""
-
 
     btnDelete.addEventListener ("click",()=>{
-        li.remove(notes)
+        li.remove()
         deleteNotes(notes)
-        localStorage.clear(li)
     })
 
     list.appendChild (li)
-    li.appendChild(btnDelete)
+    li.appendChild(btnDelete)    
+}
 
+function deleteNotes(notes) {
+    noteList = noteList.filter(nota => nota !== notes)
+    saveStorage()
+}
 
-
-let hhh=  localStorage.getItem("notas", JSON.parse(pipu))
-
-
-    
+// ─── 5. GUARDAR el array completo en localStorage ─────────────
+function saveStorage() {
+    localStorage.setItem("notas", JSON.stringify(noteList))
 }
 
 
